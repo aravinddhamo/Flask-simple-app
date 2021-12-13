@@ -11,6 +11,8 @@
 <!--CSS reference-->
 <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}">
 
+<!--BOOTSTRAP icons reference-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
 
 
@@ -28,9 +30,21 @@
         </div>
  
   <ul class="nav nav-pills nav-justified">
+    {% if active_page == "index" %}
     <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="{{url_for('main_page')}}">ELF Tasklist Creation</a>
+    
+      <a class="nav-link active" style="margin-top: 1rem;margin-right: 0rem;" aria-current="page" href="{{url_for('download_report')}}"> <span class="bi bi-download"></span></a>
     </li>
+      <li class="nav-item">
+        <a class="nav-link active" style="margin-left: 1rem;padding-right: 1rem;width: fit-content;" aria-current="page" href="{{url_for('main_page')}}">ELF Tasklist </a>
+      </li>
+{%else%}
+<li class="nav-item">
+  <a class="nav-link active" style="margin-left: 1rem;padding-right: 1rem;width: fit-content;" aria-current="page" href="{{url_for('main_page')}}">ELF Tasklist </a>
+</li>
+{% endif %}
+    
+    
   </ul>
   </nav>
 </head>

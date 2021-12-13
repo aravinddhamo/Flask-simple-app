@@ -1,7 +1,8 @@
 from flask_codes import app,db
 from flask_codes.models import User
-from flask import render_template,url_for,redirect,flash,request
+from flask import render_template,url_for,redirect,flash,request,Response
 from flask_codes.forms import RegisterForm,SearchForm
+import io,xlwt
 
 @app.route('/home',methods=['POST','GET'])
 def home():
@@ -63,3 +64,36 @@ def main_page():
 def all_tskl():
     details=User.query.all()
     return render_template('all_tskl.html',title='Tasklist Page',details=details)
+
+#Download task-to download the datas into excel file
+@app.route('/download_report')
+def download_report():
+    details=User.query.all()
+    output=io.BytesIO()
+    #create Workbook object
+    workbook=xlwt.Workbook()
+    #add a sheet
+    sh=workbook.add_sheet('Client Report')
+ 
+ #Adding first row as headers
+    sh.write(0,0,'ClientId')
+    sh.write(0,1,'ClientName')
+    sh.write(0,2,'ClientType')
+    sh.write(0,3,'ClientBSI')
+    sh.write(0,4,'ClientStatus')
+    
+    #inserting every values inot excel
+    idx=0
+    for rows in details:
+        sh.write(idx+1,0,rows.ClientId)
+        sh.write(idx+1,1,rows.ClientName)
+        sh.write(idx+1,2,rows.ClientType)
+        sh.write(idx+1,3,rows.ClientBSI)
+        sh.write(idx+1,4,rows.ClientStatus)
+        idx+=1
+
+    workbook.save(output)
+    output.seek(0)
+
+     
+    return Response(output,mimetype='application/ms-excel',headers={"Content-Disposition":"attachment;filename=Client_report.xls"})
